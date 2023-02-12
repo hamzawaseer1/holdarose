@@ -110,14 +110,3 @@ jhipster:
 # ===================================================================
 
 # application:
-keycloak:
-  enabled: true
-  realm: jhipster
-  auth-server-url: http://localhost:9080
-  resource: internal
-  credentials:
-    # The client_secret
-    secret: internal
-  ssl-required: external
-  autodetect-bearer-only: true
-  principal-attribute: client_credentials
