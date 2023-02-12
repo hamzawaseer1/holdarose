@@ -6,7 +6,6 @@ import com.holdarose.service.dto.FoundationDTO;
 import com.holdarose.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -146,10 +145,9 @@ public class FoundationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of foundations in body.
      */
     @GetMapping("/foundations")
-    public ResponseEntity<List<FoundationDTO>> getAllFoundations(@org.springdoc.api.annotations.ParameterObject Pageable pageable
-    , Principal principal) {
+    public ResponseEntity<List<FoundationDTO>> getAllFoundations(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Foundations");
-        Page<FoundationDTO> page = foundationService.findAll(pageable, principal);
+        Page<FoundationDTO> page = foundationService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

@@ -2,6 +2,7 @@ package com.holdarose.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.holdarose.domain.enumeration.Gender;
+import com.holdarose.domain.enumeration.Status;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,9 @@ public class Child implements Serializable {
 
     @Field("gender")
     private Gender gender;
+
+    @Field("status")
+    private Status status;
 
     @DBRef
     @Field("fosters")
@@ -129,6 +133,19 @@ public class Child implements Serializable {
         this.gender = gender;
     }
 
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public Child status(Status status) {
+        this.setStatus(status);
+        return this;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public Set<Fosters> getFosters() {
         return this.fosters;
     }
@@ -221,6 +238,7 @@ public class Child implements Serializable {
             ", image='" + getImage() + "'" +
             ", imageContentType='" + getImageContentType() + "'" +
             ", gender='" + getGender() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }
