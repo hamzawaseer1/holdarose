@@ -8,9 +8,7 @@ import com.holdarose.repository.UserRepository;
 import com.holdarose.security.SecurityUtils;
 import com.holdarose.service.dto.AdminUserDTO;
 import com.holdarose.service.dto.UserDTO;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.holdarose.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -22,12 +20,18 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Service class for managing users.
  */
 @Service
 public class UserService {
 
+    private static final String ENTITY_NAME = "USER_SERVICE";
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
@@ -83,6 +87,7 @@ public class UserService {
 
     /**
      * Gets a list of all the authorities.
+     *
      * @return a list of all the authorities.
      */
     public List<String> getAuthorities() {
@@ -123,6 +128,25 @@ public class UserService {
             this.clearUserCaches(user);
         }
         return user;
+    }
+
+    public User getUserFromPrincipal(Principal principal) {
+        if (principal instanceof AbstractAuthenticationToken) {
+            AdminUserDTO userFromAuthentication = getUserFromAuthentication((AbstractAuthenticationToken) principal);
+            User user = new User();
+            user.setLogin(userFromAuthentication.getLogin());
+            user.setEmail(userFromAuthentication.getEmail());
+            user.setId(userFromAuthentication.getId());
+            Authority authority = new Authority();
+            if (userFromAuthentication.getAuthorities().stream().findFirst().isPresent()) {
+                authority.setName(userFromAuthentication.getAuthorities().stream().findFirst().orElseThrow(
+                    () -> {throw new BadRequestAlertException("", "", "");}
+                ));
+                user.setAuthorities(Set.of(authority));
+            }
+            return user;
+        }
+        throw new BadRequestAlertException("Not Authorized", ENTITY_NAME, "Not Authorized");
     }
 
     /**

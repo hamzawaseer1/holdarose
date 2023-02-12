@@ -1,7 +1,6 @@
 package com.holdarose.service.dto;
 
 import com.holdarose.domain.enumeration.Gender;
-import com.holdarose.domain.enumeration.Status;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -20,8 +19,6 @@ public class ChildDTO implements Serializable {
 
     private String imageContentType;
     private Gender gender;
-
-    private Status status;
 
     private FoundationDTO foundation;
 
@@ -73,14 +70,6 @@ public class ChildDTO implements Serializable {
         this.gender = gender;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public FoundationDTO getFoundation() {
         return foundation;
     }
@@ -119,7 +108,6 @@ public class ChildDTO implements Serializable {
             ", age=" + getAge() +
             ", image='" + getImage() + "'" +
             ", gender='" + getGender() + "'" +
-            ", status='" + getStatus() + "'" +
             ", foundation=" + getFoundation() +
             "}";
     }

@@ -1,6 +1,8 @@
 package com.holdarose.service;
 
 import com.holdarose.service.dto.AdoptionRequestDTO;
+
+import java.security.Principal;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +41,7 @@ public interface AdoptionRequestService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<AdoptionRequestDTO> findAll(Pageable pageable);
+    Page<AdoptionRequestDTO> findAll(Pageable pageable, Principal principal);
 
     /**
      * Get the "id" adoptionRequest.
