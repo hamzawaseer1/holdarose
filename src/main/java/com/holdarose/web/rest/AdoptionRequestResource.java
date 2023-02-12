@@ -6,6 +6,7 @@ import com.holdarose.service.dto.AdoptionRequestDTO;
 import com.holdarose.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -147,10 +148,11 @@ public class AdoptionRequestResource {
      */
     @GetMapping("/adoption-requests")
     public ResponseEntity<List<AdoptionRequestDTO>> getAllAdoptionRequests(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        Principal principal
     ) {
         log.debug("REST request to get a page of AdoptionRequests");
-        Page<AdoptionRequestDTO> page = adoptionRequestService.findAll(pageable);
+        Page<AdoptionRequestDTO> page = adoptionRequestService.findAll(pageable, principal);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

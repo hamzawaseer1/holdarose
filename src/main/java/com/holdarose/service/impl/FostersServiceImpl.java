@@ -75,6 +75,7 @@ public class FostersServiceImpl implements FostersService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete Fosters : {}", id);
+
         fostersRepository.deleteById(id);
     }
 }

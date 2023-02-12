@@ -1,16 +1,27 @@
 package com.holdarose.service.impl;
 
 import com.holdarose.domain.AdoptionRequest;
+import com.holdarose.domain.User;
 import com.holdarose.repository.AdoptionRequestRepository;
+import com.holdarose.repository.ChildRepository;
+import com.holdarose.repository.FoundationRepository;
 import com.holdarose.service.AdoptionRequestService;
+import com.holdarose.service.UserService;
 import com.holdarose.service.dto.AdoptionRequestDTO;
 import com.holdarose.service.mapper.AdoptionRequestMapper;
-import java.util.Optional;
+import com.holdarose.service.mapper.ChildMapper;
+import com.holdarose.service.mapper.FoundationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link AdoptionRequest}.
@@ -24,9 +35,15 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
 
     private final AdoptionRequestMapper adoptionRequestMapper;
 
-    public AdoptionRequestServiceImpl(AdoptionRequestRepository adoptionRequestRepository, AdoptionRequestMapper adoptionRequestMapper) {
+    private final ChildServiceImpl childService;
+
+    private final UserService userService;
+
+    public AdoptionRequestServiceImpl(AdoptionRequestRepository adoptionRequestRepository, AdoptionRequestMapper adoptionRequestMapper, FoundationRepository foundationRepository, FoundationMapper foundationMapper, ChildRepository childRepository, ChildMapper childMapper, ChildServiceImpl childService, UserService userService) {
         this.adoptionRequestRepository = adoptionRequestRepository;
         this.adoptionRequestMapper = adoptionRequestMapper;
+        this.childService = childService;
+        this.userService = userService;
     }
 
     @Override
@@ -61,9 +78,13 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
     }
 
     @Override
-    public Page<AdoptionRequestDTO> findAll(Pageable pageable) {
+    public Page<AdoptionRequestDTO> findAll(Pageable pageable, Principal principal) {
         log.debug("Request to get all AdoptionRequests");
-        return adoptionRequestRepository.findAll(pageable).map(adoptionRequestMapper::toDto);
+        User userFromPrincipal = userService.getUserFromPrincipal(principal);
+        String foundationName = userFromPrincipal.getLogin();
+        List<AdoptionRequestDTO> adoptionRequestDTO = adoptionRequestRepository.findAdoptionRequestByApprovedFalseAndFoundationName(foundationName)
+            .stream().map(adoptionRequestMapper::toDto).collect(Collectors.toList());
+        return new PageImpl<>(adoptionRequestDTO, pageable, adoptionRequestDTO.size());
     }
 
     @Override

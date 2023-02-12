@@ -279,3 +279,4 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [setting up continuous integration]: https://www.jhipster.tech/setting-up-ci/
 [node.js]: https://nodejs.org/
 [npm]: https://www.npmjs.com/
+"# holdarose" 

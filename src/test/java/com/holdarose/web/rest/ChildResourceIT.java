@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.holdarose.IntegrationTest;
 import com.holdarose.domain.Child;
 import com.holdarose.domain.enumeration.Gender;
-import com.holdarose.domain.enumeration.Status;
 import com.holdarose.repository.ChildRepository;
 import com.holdarose.service.dto.ChildDTO;
 import com.holdarose.service.mapper.ChildMapper;
@@ -46,9 +45,6 @@ class ChildResourceIT {
     private static final Gender DEFAULT_GENDER = Gender.MALE;
     private static final Gender UPDATED_GENDER = Gender.FEMALE;
 
-    private static final Status DEFAULT_STATUS = Status.AVAILABLE;
-    private static final Status UPDATED_STATUS = Status.OCCUPIED;
-
     private static final String ENTITY_API_URL = "/api/children";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -75,8 +71,7 @@ class ChildResourceIT {
             .age(DEFAULT_AGE)
             .image(DEFAULT_IMAGE)
             .imageContentType(DEFAULT_IMAGE_CONTENT_TYPE)
-            .gender(DEFAULT_GENDER)
-            .status(DEFAULT_STATUS);
+            .gender(DEFAULT_GENDER);
         return child;
     }
 
@@ -92,8 +87,7 @@ class ChildResourceIT {
             .age(UPDATED_AGE)
             .image(UPDATED_IMAGE)
             .imageContentType(UPDATED_IMAGE_CONTENT_TYPE)
-            .gender(UPDATED_GENDER)
-            .status(UPDATED_STATUS);
+            .gender(UPDATED_GENDER);
         return child;
     }
 
@@ -126,7 +120,6 @@ class ChildResourceIT {
         assertThat(testChild.getImage()).isEqualTo(DEFAULT_IMAGE);
         assertThat(testChild.getImageContentType()).isEqualTo(DEFAULT_IMAGE_CONTENT_TYPE);
         assertThat(testChild.getGender()).isEqualTo(DEFAULT_GENDER);
-        assertThat(testChild.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -167,8 +160,7 @@ class ChildResourceIT {
             .andExpect(jsonPath("$.[*].age").value(hasItem(DEFAULT_AGE)))
             .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].image").value(hasItem(Base64Utils.encodeToString(DEFAULT_IMAGE))))
-            .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
+            .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())));
     }
 
     @Test
@@ -186,8 +178,7 @@ class ChildResourceIT {
             .andExpect(jsonPath("$.age").value(DEFAULT_AGE))
             .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
             .andExpect(jsonPath("$.image").value(Base64Utils.encodeToString(DEFAULT_IMAGE)))
-            .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
-            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
+            .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()));
     }
 
     @Test
@@ -210,8 +201,7 @@ class ChildResourceIT {
             .age(UPDATED_AGE)
             .image(UPDATED_IMAGE)
             .imageContentType(UPDATED_IMAGE_CONTENT_TYPE)
-            .gender(UPDATED_GENDER)
-            .status(UPDATED_STATUS);
+            .gender(UPDATED_GENDER);
         ChildDTO childDTO = childMapper.toDto(updatedChild);
 
         restChildMockMvc
@@ -232,7 +222,6 @@ class ChildResourceIT {
         assertThat(testChild.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testChild.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
         assertThat(testChild.getGender()).isEqualTo(UPDATED_GENDER);
-        assertThat(testChild.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test
@@ -335,7 +324,6 @@ class ChildResourceIT {
         assertThat(testChild.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testChild.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
         assertThat(testChild.getGender()).isEqualTo(DEFAULT_GENDER);
-        assertThat(testChild.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -354,8 +342,7 @@ class ChildResourceIT {
             .age(UPDATED_AGE)
             .image(UPDATED_IMAGE)
             .imageContentType(UPDATED_IMAGE_CONTENT_TYPE)
-            .gender(UPDATED_GENDER)
-            .status(UPDATED_STATUS);
+            .gender(UPDATED_GENDER);
 
         restChildMockMvc
             .perform(
@@ -375,7 +362,6 @@ class ChildResourceIT {
         assertThat(testChild.getImage()).isEqualTo(UPDATED_IMAGE);
         assertThat(testChild.getImageContentType()).isEqualTo(UPDATED_IMAGE_CONTENT_TYPE);
         assertThat(testChild.getGender()).isEqualTo(UPDATED_GENDER);
-        assertThat(testChild.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test
