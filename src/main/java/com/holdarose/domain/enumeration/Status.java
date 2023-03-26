@@ -6,6 +6,5 @@ package com.holdarose.domain.enumeration;
 public enum Status {
     AVAILABLE,
     OCCUPIED,
-
     ADOPTED,
 }

@@ -1,16 +1,17 @@
 package com.holdarose.service.impl;
 
 import com.holdarose.domain.AdoptionRequest;
+import com.holdarose.domain.Child;
+import com.holdarose.domain.Fosters;
 import com.holdarose.domain.User;
+import com.holdarose.domain.enumeration.Status;
 import com.holdarose.repository.AdoptionRequestRepository;
 import com.holdarose.repository.ChildRepository;
-import com.holdarose.repository.FoundationRepository;
+import com.holdarose.repository.FostersRepository;
 import com.holdarose.service.AdoptionRequestService;
 import com.holdarose.service.UserService;
 import com.holdarose.service.dto.AdoptionRequestDTO;
 import com.holdarose.service.mapper.AdoptionRequestMapper;
-import com.holdarose.service.mapper.ChildMapper;
-import com.holdarose.service.mapper.FoundationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -35,20 +37,32 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
 
     private final AdoptionRequestMapper adoptionRequestMapper;
 
-    private final ChildServiceImpl childService;
+    private final ChildRepository childRepository;
 
     private final UserService userService;
 
-    public AdoptionRequestServiceImpl(AdoptionRequestRepository adoptionRequestRepository, AdoptionRequestMapper adoptionRequestMapper, FoundationRepository foundationRepository, FoundationMapper foundationMapper, ChildRepository childRepository, ChildMapper childMapper, ChildServiceImpl childService, UserService userService) {
+    private final FostersRepository fostersRepository;
+
+    public AdoptionRequestServiceImpl(AdoptionRequestRepository adoptionRequestRepository,
+                                      AdoptionRequestMapper adoptionRequestMapper,
+                                      ChildRepository childRepository,
+                                      UserService userService,
+                                      FostersRepository fostersRepository) {
         this.adoptionRequestRepository = adoptionRequestRepository;
         this.adoptionRequestMapper = adoptionRequestMapper;
-        this.childService = childService;
+        this.childRepository = childRepository;
         this.userService = userService;
+        this.fostersRepository = fostersRepository;
     }
 
     @Override
     public AdoptionRequestDTO save(AdoptionRequestDTO adoptionRequestDTO) {
         log.debug("Request to save AdoptionRequest : {}", adoptionRequestDTO);
+        Optional<Child> childFromDB = childRepository.findById(adoptionRequestDTO.getChild().getId());
+        if (childFromDB.isPresent()) {
+            childFromDB.get().setStatus(Status.OCCUPIED);
+            childRepository.save(childFromDB.get());
+        }
         AdoptionRequest adoptionRequest = adoptionRequestMapper.toEntity(adoptionRequestDTO);
         adoptionRequest = adoptionRequestRepository.save(adoptionRequest);
         return adoptionRequestMapper.toDto(adoptionRequest);
@@ -57,6 +71,19 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
     @Override
     public AdoptionRequestDTO update(AdoptionRequestDTO adoptionRequestDTO) {
         log.debug("Request to save AdoptionRequest : {}", adoptionRequestDTO);
+        Optional<Child> childFromDb = childRepository.findById(adoptionRequestDTO.getChild().getId());
+        if (childFromDb.isPresent() && Boolean.TRUE.equals(adoptionRequestDTO.getApproved())) {
+            childFromDb.get().setStatus(Status.ADOPTED);
+            childRepository.save(childFromDb.get());
+            Fosters foster = new Fosters();
+            foster.setName(adoptionRequestDTO.getFosterName());
+            foster.setCnic(adoptionRequestDTO.getCnic());
+            foster.setId(UUID.randomUUID().toString());
+            foster.setLocation(adoptionRequestDTO.getFoundationName());
+            foster.setJobTitle(adoptionRequestDTO.getFosterJobTitle());
+            foster.setChild(childFromDb.get());
+            fostersRepository.save(foster);
+        }
         AdoptionRequest adoptionRequest = adoptionRequestMapper.toEntity(adoptionRequestDTO);
         adoptionRequest = adoptionRequestRepository.save(adoptionRequest);
         return adoptionRequestMapper.toDto(adoptionRequest);
@@ -96,6 +123,12 @@ public class AdoptionRequestServiceImpl implements AdoptionRequestService {
     @Override
     public void delete(String id) {
         log.debug("Request to delete AdoptionRequest : {}", id);
-        adoptionRequestRepository.deleteById(id);
+        Optional<AdoptionRequest> byId = adoptionRequestRepository.findById(id);
+        if (byId.isPresent()) {
+            Child child = byId.get().getChild();
+            child.setStatus(Status.AVAILABLE);
+            childRepository.save(child);
+            adoptionRequestRepository.deleteById(id);
+        }
     }
 }

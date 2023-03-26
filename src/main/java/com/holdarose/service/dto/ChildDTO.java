@@ -1,7 +1,10 @@
 package com.holdarose.service.dto;
 
 import com.holdarose.domain.enumeration.Gender;
+import com.holdarose.domain.enumeration.Status;
+
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -17,10 +20,37 @@ public class ChildDTO implements Serializable {
 
     private byte[] image;
 
+    private Status status;
+
+    @Override
+    public String toString() {
+        return "ChildDTO{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", age=" + age +
+            ", image=" + Arrays.toString(image) +
+            ", status=" + status +
+            ", imageContentType='" + imageContentType + '\'' +
+            ", gender=" + gender +
+            ", foundation=" + foundation +
+            '}';
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     private String imageContentType;
     private Gender gender;
 
     private FoundationDTO foundation;
+
+    public ChildDTO() {
+    }
 
     public String getId() {
         return id;
@@ -99,16 +129,4 @@ public class ChildDTO implements Serializable {
         return Objects.hash(this.id);
     }
 
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "ChildDTO{" +
-            "id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
-            ", age=" + getAge() +
-            ", image='" + getImage() + "'" +
-            ", gender='" + getGender() + "'" +
-            ", foundation=" + getFoundation() +
-            "}";
-    }
 }

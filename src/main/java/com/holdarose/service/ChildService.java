@@ -1,6 +1,8 @@
 package com.holdarose.service;
 
 import com.holdarose.service.dto.ChildDTO;
+
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -40,7 +42,7 @@ public interface ChildService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<ChildDTO> findAll(Pageable pageable);
+    Page<ChildDTO> findAll(Pageable pageable, Principal principal);
     /**
      * Get all the ChildDTO where AdoptionRequest is {@code null}.
      *

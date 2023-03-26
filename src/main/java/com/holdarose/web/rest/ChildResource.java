@@ -6,6 +6,7 @@ import com.holdarose.service.dto.ChildDTO;
 import com.holdarose.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class ChildResource {
 
     private final Logger log = LoggerFactory.getLogger(ChildResource.class);
 
-    private static final String ENTITY_NAME = "holdaroseChild";
+    public static final String ENTITY_NAME = "holdaroseChild";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -147,14 +148,15 @@ public class ChildResource {
     @GetMapping("/children")
     public ResponseEntity<List<ChildDTO>> getAllChildren(
         @org.springdoc.api.annotations.ParameterObject Pageable pageable,
-        @RequestParam(required = false) String filter
+        @RequestParam(required = false) String filter,
+        Principal principal
     ) {
         if ("adoptionrequest-is-null".equals(filter)) {
             log.debug("REST request to get all Childs where adoptionRequest is null");
             return new ResponseEntity<>(childService.findAllWhereAdoptionRequestIsNull(), HttpStatus.OK);
         }
         log.debug("REST request to get a page of Children");
-        Page<ChildDTO> page = childService.findAll(pageable);
+        Page<ChildDTO> page = childService.findAll(pageable, principal);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
