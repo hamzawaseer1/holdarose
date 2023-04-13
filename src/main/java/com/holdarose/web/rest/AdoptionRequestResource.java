@@ -49,13 +49,7 @@ public class AdoptionRequestResource {
         this.adoptionRequestRepository = adoptionRequestRepository;
     }
 
-    /**
-     * {@code POST  /adoption-requests} : Create a new adoptionRequest.
-     *
-     * @param adoptionRequestDTO the adoptionRequestDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new adoptionRequestDTO, or with status {@code 400 (Bad Request)} if the adoptionRequest has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PostMapping("/adoption-requests")
     public ResponseEntity<AdoptionRequestDTO> createAdoptionRequest(@Valid @RequestBody AdoptionRequestDTO adoptionRequestDTO)
         throws URISyntaxException {
@@ -70,16 +64,7 @@ public class AdoptionRequestResource {
             .body(result);
     }
 
-    /**
-     * {@code PUT  /adoption-requests/:id} : Updates an existing adoptionRequest.
-     *
-     * @param id the id of the adoptionRequestDTO to save.
-     * @param adoptionRequestDTO the adoptionRequestDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated adoptionRequestDTO,
-     * or with status {@code 400 (Bad Request)} if the adoptionRequestDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the adoptionRequestDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PutMapping("/adoption-requests/{id}")
     public ResponseEntity<AdoptionRequestDTO> updateAdoptionRequest(
         @PathVariable(value = "id", required = false) final String id,
@@ -104,17 +89,7 @@ public class AdoptionRequestResource {
             .body(result);
     }
 
-    /**
-     * {@code PATCH  /adoption-requests/:id} : Partial updates given fields of an existing adoptionRequest, field will ignore if it is null
-     *
-     * @param id the id of the adoptionRequestDTO to save.
-     * @param adoptionRequestDTO the adoptionRequestDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated adoptionRequestDTO,
-     * or with status {@code 400 (Bad Request)} if the adoptionRequestDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the adoptionRequestDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the adoptionRequestDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PatchMapping(value = "/adoption-requests/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<AdoptionRequestDTO> partialUpdateAdoptionRequest(
         @PathVariable(value = "id", required = false) final String id,
@@ -140,12 +115,6 @@ public class AdoptionRequestResource {
         );
     }
 
-    /**
-     * {@code GET  /adoption-requests} : get all the adoptionRequests.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of adoptionRequests in body.
-     */
     @GetMapping("/adoption-requests")
     public ResponseEntity<List<AdoptionRequestDTO>> getAllAdoptionRequests(
         @org.springdoc.api.annotations.ParameterObject Pageable pageable,
@@ -157,12 +126,7 @@ public class AdoptionRequestResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    /**
-     * {@code GET  /adoption-requests/:id} : get the "id" adoptionRequest.
-     *
-     * @param id the id of the adoptionRequestDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the adoptionRequestDTO, or with status {@code 404 (Not Found)}.
-     */
+
     @GetMapping("/adoption-requests/{id}")
     public ResponseEntity<AdoptionRequestDTO> getAdoptionRequest(@PathVariable String id) {
         log.debug("REST request to get AdoptionRequest : {}", id);
@@ -170,12 +134,7 @@ public class AdoptionRequestResource {
         return ResponseUtil.wrapOrNotFound(adoptionRequestDTO);
     }
 
-    /**
-     * {@code DELETE  /adoption-requests/:id} : delete the "id" adoptionRequest.
-     *
-     * @param id the id of the adoptionRequestDTO to delete.
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-     */
+
     @DeleteMapping("/adoption-requests/{id}")
     public ResponseEntity<Void> deleteAdoptionRequest(@PathVariable String id) {
         log.debug("REST request to delete AdoptionRequest : {}", id);

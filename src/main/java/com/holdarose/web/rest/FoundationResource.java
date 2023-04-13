@@ -69,16 +69,6 @@ public class FoundationResource {
             .body(result);
     }
 
-    /**
-     * {@code PUT  /foundations/:id} : Updates an existing foundation.
-     *
-     * @param id the id of the foundationDTO to save.
-     * @param foundationDTO the foundationDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated foundationDTO,
-     * or with status {@code 400 (Bad Request)} if the foundationDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the foundationDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
     @PutMapping("/foundations/{id}")
     public ResponseEntity<FoundationDTO> updateFoundation(
         @PathVariable(value = "id", required = false) final String id,
@@ -103,17 +93,6 @@ public class FoundationResource {
             .body(result);
     }
 
-    /**
-     * {@code PATCH  /foundations/:id} : Partial updates given fields of an existing foundation, field will ignore if it is null
-     *
-     * @param id the id of the foundationDTO to save.
-     * @param foundationDTO the foundationDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated foundationDTO,
-     * or with status {@code 400 (Bad Request)} if the foundationDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the foundationDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the foundationDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
     @PatchMapping(value = "/foundations/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<FoundationDTO> partialUpdateFoundation(
         @PathVariable(value = "id", required = false) final String id,
@@ -139,12 +118,7 @@ public class FoundationResource {
         );
     }
 
-    /**
-     * {@code GET  /foundations} : get all the foundations.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of foundations in body.
-     */
+
     @GetMapping("/foundations")
     public ResponseEntity<List<FoundationDTO>> getAllFoundations(@org.springdoc.api.annotations.ParameterObject Pageable pageable
     , Principal principal) {
@@ -154,12 +128,7 @@ public class FoundationResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    /**
-     * {@code GET  /foundations/:id} : get the "id" foundation.
-     *
-     * @param id the id of the foundationDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the foundationDTO, or with status {@code 404 (Not Found)}.
-     */
+
     @GetMapping("/foundations/{id}")
     public ResponseEntity<FoundationDTO> getFoundation(@PathVariable String id) {
         log.debug("REST request to get Foundation : {}", id);
@@ -167,12 +136,7 @@ public class FoundationResource {
         return ResponseUtil.wrapOrNotFound(foundationDTO);
     }
 
-    /**
-     * {@code DELETE  /foundations/:id} : delete the "id" foundation.
-     *
-     * @param id the id of the foundationDTO to delete.
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-     */
+
     @DeleteMapping("/foundations/{id}")
     public ResponseEntity<Void> deleteFoundation(@PathVariable String id) {
         log.debug("REST request to delete Foundation : {}", id);

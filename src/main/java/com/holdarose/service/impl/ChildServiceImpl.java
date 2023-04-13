@@ -14,7 +14,6 @@ import com.holdarose.service.dto.ChildDTO;
 import com.holdarose.service.dto.FoundationDTO;
 import com.holdarose.service.mapper.ChildMapper;
 import com.holdarose.service.mapper.FoundationMapper;
-import com.holdarose.web.rest.ChildResource;
 import com.holdarose.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +22,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static com.holdarose.web.rest.ChildResource.ENTITY_NAME;
@@ -64,7 +61,7 @@ public class ChildServiceImpl implements ChildService {
     @Override
     public ChildDTO save(ChildDTO childDTO) {
         log.debug("Request to save Child : {}", childDTO);
-        childDTO.setName(childDTO.getName().toUpperCase());
+        childDTO.setName(childDTO.getName().toLowerCase());
         Child child = childMapper.toEntity(childDTO);
         child.status(Status.AVAILABLE);
         child = childRepository.save(child);
@@ -112,7 +109,7 @@ public class ChildServiceImpl implements ChildService {
                         .findChildByFoundation(foundation.get(), pageable)
                         .map(childMapper::toDto)
                         .map(childDTO -> {
-                            childDTO.setFoundation(foundationDTO.orElseThrow(()-> new BadRequestAlertException("Foundation not found", ENTITY_NAME, "foundationNotFound")));
+                            childDTO.setFoundation(foundationDTO.orElseThrow(() -> new BadRequestAlertException("Foundation not found", ENTITY_NAME, "foundationNotFound")));
                             return childDTO;
                         })
                         .stream().collect(Collectors.toList());
@@ -120,8 +117,8 @@ public class ChildServiceImpl implements ChildService {
                 }
             }
         }
-        Page<Child> all = childRepository.findAll(pageable);
-        List<ChildDTO> collect = all.stream()
+        List<ChildDTO> collect = childRepository.findAll(pageable)
+            .stream()
             .map(child -> {
                 ChildDTO childDTO = childMapper.toDto(child);
                 Optional<FoundationDTO> foundationDTO = foundationRepository.findById(childDTO.getFoundation().getId())

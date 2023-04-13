@@ -46,13 +46,7 @@ public class FostersResource {
         this.fostersRepository = fostersRepository;
     }
 
-    /**
-     * {@code POST  /fosters} : Create a new fosters.
-     *
-     * @param fostersDTO the fostersDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new fostersDTO, or with status {@code 400 (Bad Request)} if the fosters has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PostMapping("/fosters")
     public ResponseEntity<FostersDTO> createFosters(@RequestBody FostersDTO fostersDTO) throws URISyntaxException {
         log.debug("REST request to save Fosters : {}", fostersDTO);
@@ -66,16 +60,7 @@ public class FostersResource {
             .body(result);
     }
 
-    /**
-     * {@code PUT  /fosters/:id} : Updates an existing fosters.
-     *
-     * @param id the id of the fostersDTO to save.
-     * @param fostersDTO the fostersDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated fostersDTO,
-     * or with status {@code 400 (Bad Request)} if the fostersDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the fostersDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PutMapping("/fosters/{id}")
     public ResponseEntity<FostersDTO> updateFosters(
         @PathVariable(value = "id", required = false) final String id,
@@ -100,17 +85,7 @@ public class FostersResource {
             .body(result);
     }
 
-    /**
-     * {@code PATCH  /fosters/:id} : Partial updates given fields of an existing fosters, field will ignore if it is null
-     *
-     * @param id the id of the fostersDTO to save.
-     * @param fostersDTO the fostersDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated fostersDTO,
-     * or with status {@code 400 (Bad Request)} if the fostersDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the fostersDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the fostersDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
+
     @PatchMapping(value = "/fosters/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<FostersDTO> partialUpdateFosters(
         @PathVariable(value = "id", required = false) final String id,
@@ -136,12 +111,7 @@ public class FostersResource {
         );
     }
 
-    /**
-     * {@code GET  /fosters} : get all the fosters.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of fosters in body.
-     */
+
     @GetMapping("/fosters")
     public ResponseEntity<List<FostersDTO>> getAllFosters(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Fosters");
@@ -150,12 +120,7 @@ public class FostersResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    /**
-     * {@code GET  /fosters/:id} : get the "id" fosters.
-     *
-     * @param id the id of the fostersDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the fostersDTO, or with status {@code 404 (Not Found)}.
-     */
+
     @GetMapping("/fosters/{id}")
     public ResponseEntity<FostersDTO> getFosters(@PathVariable String id) {
         log.debug("REST request to get Fosters : {}", id);
@@ -163,12 +128,7 @@ public class FostersResource {
         return ResponseUtil.wrapOrNotFound(fostersDTO);
     }
 
-    /**
-     * {@code DELETE  /fosters/:id} : delete the "id" fosters.
-     *
-     * @param id the id of the fostersDTO to delete.
-     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
-     */
+
     @DeleteMapping("/fosters/{id}")
     public ResponseEntity<Void> deleteFosters(@PathVariable String id) {
         log.debug("REST request to delete Fosters : {}", id);
